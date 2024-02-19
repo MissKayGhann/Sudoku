@@ -1,0 +1,45 @@
+Explain the concept of closures in JavaScript. Provide an example and discuss why closures are important in modern JavaScript development.
+- A closure is a JavaScript feature that allows an inner function to access variables from an outer function's scope even after the outer function has completed execution. This is useful in modern programming for defining private variables and encapsulating functions.
+ function makeAdder(x) {
+  return function(y) {
+    return x + y;
+  };
+}
+
+const add5 = makeAdder(5);
+console.log(add5(2)); // 7
+
+-In this example, add5 is a closure that has access to x from makeAdder's scope and can add 5 to any number.
+
+Describe the differences between var, let, and const in JavaScript. When would you use each of them? Provide examples to illustrate your answer.
+-Var is function-scoped and can be re-declared or updated. Let is block-scoped; it can be changed but not re-declared. Const is block-scoped and cannot be modified or re-declared.
+-Use var for variables that need to be re-declared, let for mutable variables, and const for variables that should not change.
+
+What are higher-order functions in JavaScript? Provide an example of a higher-order function and explain its usage.
+-Higher-order functions are functions that can take other functions as arguments or return them as results.
+function withLogging(fn) {
+  return function(...args) {
+    console.log(`Calling function with arguments: ${args}`);
+    return fn(...args);
+  };
+}
+
+function add(a, b) {
+  return a + b;
+}
+
+const addWithLogging = withLogging(add);
+console.log(addWithLogging(3, 4)); 
+This is useful for creating utilities like withLogging that can add behavior to other functions.
+
+Explain the concept of state and props in React. How do they differ, and how are they used in React component development?
+-State is a mutable data structure that is used to store component data that changes over time. Props (short for "properties") are immutable and are used to pass data and event handlers to child components.
+-They differ in that state is internal and controlled by the component itself, while props are passed to the component by its parent.
+
+Discuss the concept of component lifecycle methods in React. Provide a brief overview of some commonly used lifecycle methods and when they are invoked during the component's lifecycle.
+-Lifecycle methods are hooks that allow execution of code at different points during a component's lifecycle.
+--componentDidMount: Called after the component is mounted into the DOM. Used for API calls, subscriptions, etc.
+--componentDidUpdate: Called after the component is updated in the DOM. Used for DOM manipulation, network requests, etc., in response to state/prop changes.
+--componentWillUnmount: Called before the component is removed
+ from the DOM. Used for cleanup tasks like invalidating timers, canceling network requests, or cleaning up subscriptions.
+-These methods provide a way to directly interact with the DOM and perform operations at specific times in a component's life, ensuring that the component behaves correctly as it is rendered, updated, and eventually destroyed.
