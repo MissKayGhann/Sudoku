@@ -1,3 +1,17 @@
+let initialBoard = [
+  [7, 2, 0, 0, 1, 0, 0, 0, 0],
+  [1, 0, 0, 2, 6, 5, 0, 0, 0],
+  [0, 9, 8, 0, 0, 0, 0, 6, 0],
+  [8, 0, 0, 0, 6, 0, 0, 0, 3],
+  [4, 0, 0, 8, 0, 3, 0, 0, 1],
+  [7, 0, 0, 0, 2, 0, 0, 0, 6],
+  [0, 6, 0, 0, 0, 0, 2, 8, 0],
+  [0, 0, 0, 4, 1, 9, 0, 0, 5],
+  [0, 0, 0, 0, 8, 0, 0, 7, 9],
+];
+
+let currentBoard = JSON.parse(JSON.stringify(initialBoard));
+
 function isSafe(board, row, col, num) {
   for (let x = 0; x < 9; x++) {
     if (board[row][x] === num || board[x][col] === num) {
@@ -51,38 +65,60 @@ function solveSudoku(board) {
 function createSudoku(board) {
   const sudokuBoardContainer = document.getElementById("sudoku-board");
   sudokuBoardContainer.innerHTML = "";
-
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
-      const field = document.createElement("div");
+      const field = document.createElement("input");
       field.className = "sudoku-field";
-      field.textContent = board[row][col] !== 0 ? board[row][col] : "";
-      field.id = `cell-${row}-${col}`;
+      field.type = "text";
+      field.maxLength = "1";
+      field.value = board[row][col] !== 0 ? board[row][col] : "";
+      field.dataset.row = row;
+      field.dataset.col = col;
+
+      field.addEventListener("input", (e) => {
+        const target = e.target;
+        const value = parseInt(target.value, 10);
+        const row = parseInt(target.dataset.row, 10);
+        const col = parseInt(target.dataset.col, 10);
+        if (!isNaN(value)) {
+          if (isSafe(board, row, col, value)) {
+            board[row][col] = value;
+          } else {
+            alert("Invalid number!");
+            target.value = "";
+          }
+        } else {
+          board[row][col] = 0;
+        }
+      });
+
       sudokuBoardContainer.appendChild(field);
     }
+    sudokuBoardContainer.appendChild(document.createElement("br"));
+  }
+}
+
+function clearBoard() {
+  currentBoard = JSON.parse(JSON.stringify(initialBoard));
+  createSudoku(currentBoard);
+}
+
+function solveBoard() {
+  let boardCopy = JSON.parse(JSON.stringify(currentBoard));
+  if (solveSudoku(boardCopy)) {
+    currentBoard = boardCopy;
+    createSudoku(currentBoard);
+  } else {
+    alert("No solution exists");
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  let board = [
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [6, 0, 0, 1, 9, 5, 0, 0, 0],
-    [0, 9, 8, 0, 0, 0, 0, 6, 0],
-    [8, 0, 0, 0, 6, 0, 0, 0, 3],
-    [4, 0, 0, 8, 0, 3, 0, 0, 1],
-    [7, 0, 0, 0, 2, 0, 0, 0, 6],
-    [0, 6, 0, 0, 0, 0, 2, 8, 0],
-    [0, 0, 0, 4, 1, 9, 0, 0, 5],
-    [0, 0, 0, 0, 8, 0, 0, 7, 9],
-  ];
+  createSudoku(initialBoard);
 
-  createSudoku(board);
+  const solveButton = document.getElementById("solve-button");
+  const clearButton = document.getElementById("clear-button");
 
-  document.getElementById("solve-button").addEventListener("click", () => {
-    if (solveSudoku(board)) {
-      createSudoku(board);
-    } else {
-      alert("No solution exists");
-    }
-  });
+  solveButton.addEventListener("click", solveBoard);
+  clearButton.addEventListener("click", clearBoard);
 });

@@ -1,18 +1,27 @@
 #sudoku-board {
   display: grid;
-  grid-template-columns: repeat(9, 50px);
-  grid-gap: 2px;
-  background: #000;
-  padding: 2px;
-  border: 2px solid #000;
-  margin-bottom: 20px;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 4px;
+  margin: 20px;
+  max-width: 500px;
 }
+
 .sudoku-field {
   width: 50px;
   height: 50px;
-  background-color: #fff;
-  border: 1px solid #ddd;
   text-align: center;
-  line-height: 50px;
   font-size: 20px;
+  border: 1px solid #999;
+}
+
+.sudoku-field:focus {
+  outline: none;
+  border-color: blue;
+}
+
+.button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
 }
